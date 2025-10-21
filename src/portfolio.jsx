@@ -47,10 +47,10 @@ class Bird {
       if (d > 0 && d < 100) { avx += other.vx; avy += other.vy; aCount++; }
 
       // Cohesion: steer toward neighbors' centroid
-      if (d > 0 && d < 150) { cx += other.x;  cy += other.y;  cCount++; }
+      if (d > 0 && d < 150) { cx += other.x; cy += other.y; cCount++; }
 
       // Separation: push away if too close
-      if (d > 0 && d < 40)  { sx += (this.x - other.x) / d; sy += (this.y - other.y) / d; sCount++; }
+      if (d > 0 && d < 40) { sx += (this.x - other.x) / d; sy += (this.y - other.y) / d; sCount++; }
     }
 
     if (aCount > 0) {
@@ -95,7 +95,7 @@ class Bird {
     // Rotate toward velocity (time-scaled)
     this.targetAngle = Math.atan2(this.vy, this.vx);
     let da = this.targetAngle - this.angle;
-    while (da > Math.PI)  da -= Math.PI * 2;
+    while (da > Math.PI) da -= Math.PI * 2;
     while (da < -Math.PI) da += Math.PI * 2;
     this.angle += da * 0.08 * dt;
 
@@ -254,20 +254,20 @@ export default function Portfolio() {
 
   const projects = [
     {
-      title: 'Neural Network Visualizer',
-      description: 'Real-time visualization of neural network training with interactive parameters',
-      tags: ['TensorFlow', 'Three.js', 'WebGL'],
-      link: '#'
+      title: 'This Portfolio',
+      description: 'Modern developer portfolio built with React, TailwindCSS, and Firebase, featuring dynamic project showcases, responsive design, and a clean, performant architecture.',
+      tags: ['Firebase', 'React', 'Tailwindcss', 'Vite'],
+      link: 'https://github.com/Angry-Osprey/Tlab2025'
     },
     {
-      title: 'Quantum Algorithm Simulator',
-      description: 'Browser-based quantum computing simulator with visual circuit designer',
-      tags: ['Python', 'Qiskit', 'D3.js'],
+      title: 'Comming Soon',
+      description: 'This project is not quite ready yet.',
+      tags: ['HL7 FHIR', 'Firestore', 'React'],
       link: '#'
     }
   ];
 
-  const skills = ['TypeScript', 'React', 'Node.js', 'Python', 'Firebase', 'WebGL', 'Rust', 'Go'];
+  const skills = ['C#', 'React', 'Node.js', 'Python', 'Firebase', 'WebGL', 'Unity6'];
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
@@ -292,7 +292,7 @@ export default function Portfolio() {
         <section className="min-h-dvh flex items-center justify-center px-4 pt-24 md:pt-28">
           <div className="max-w-5xl mx-auto p-8 rounded-2xl backdrop-blur-sm border border-white/10">
             <div className="mb-6 text-gray-500 font-mono text-xs tracking-[0.18em] md:text-sm">
-              DEVELOPER / ENGINEER / BUILDER
+              DEVELOPER / VETERAN / BUILDER
             </div>
 
             <h1 className="font-bold leading-tight mb-8">
@@ -355,8 +355,11 @@ export default function Portfolio() {
             <div>
               <h2 className="text-sm font-mono text-gray-500 mb-8 tracking-wider">ABOUT</h2>
               <p className="text-xl text-gray-300 leading-relaxed mb-6">
-                I'm a software engineer with a passion for building elegant solutions to complex problems.
-                My work spans across web development, machine learning, and systems architecture.
+                My role as a software engineer involves developing sophisticated solutions to handle complex technical problems. 
+                My professional experience spans work with web development and machine learning and systems architecture. 
+                I worked as an Undergraduate Research Assistant at Lamar University to help develop mixed reality solutions through the HoloLens 2 project which combined innovative technology with real-world functionality. 
+                My time in the United States Air Force 524th Special Operations Squadron under Air Force Special Operations Command (USSOCOM) has shown me how to stay precise and disciplined while being flexible. 
+                The problem-solving abilities and team collaboration experience I developed in the Air Force help me design efficient systems and overcome technical challenges with focused dedication.
               </p>
               <p className="text-xl text-gray-400 leading-relaxed">
                 Currently exploring the boundaries of what's possible with modern web technologies and pushing the
@@ -366,8 +369,8 @@ export default function Portfolio() {
 
             <div>
               <h3 className="text-sm font-mono text-gray-500 mb-8 tracking-wider">CAPABILITIES</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {['TypeScript', 'React', 'Node.js', 'Python', 'Firebase', 'WebGL', 'Java', 'C#'].map((skill, i) => (
+              <div className="grid grid-cols-2 gap-4">
+                {['Tailwindcss', 'React', 'Node.js', 'Python', 'Firebase', 'WebGL', 'Java', 'C#'].map((skill, i) => (
                   <div key={i} className="border rounded-2xl border-gray-800 p-4 text-gray-400 hover:border-gray-600 hover:text-white transition-all">
                     {skill}
                   </div>
@@ -425,9 +428,9 @@ export default function Portfolio() {
             </div>
 
             <div className="flex justify-center space-x-8 mt-16">
-              <a href="#" className="text-gray-600 hover:text-white transition-colors"><Github size={24} /></a>
-              <a href="#" className="text-gray-600 hover:text-white transition-colors"><Linkedin size={24} /></a>
-              <a href="mailto:your.email@example.com" className="text-gray-600 hover:text-white transition-colors"><Mail size={24} /></a>
+              <a href="https://github.com/Angry-Osprey" target='_blank' rel="noopener noreferrer" className="text-gray-600 hover:text-white transition-colors"><Github size={24} /></a>
+              <a href="https://www.linkedin.com/in/tyler-thompson-429305146/" target='_blank' rel="noopener noreferrer" className="text-gray-600 hover:text-white transition-colors"><Linkedin size={24} /></a>
+              <a href="mailto:tylerthompson508@gmail.com" className="text-gray-600 hover:text-white transition-colors"><Mail size={24} /></a>
             </div>
           </div>
         </section>
