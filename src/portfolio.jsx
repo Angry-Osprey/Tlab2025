@@ -247,8 +247,8 @@ export default function Portfolio() {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Message received.');
+    console.log('Form submitted:', formData); 
+    alert('Form not submitted: Backend Migration in progress! please contact me via linkedin or gmail. sorry for the inconvenience.');//response message to user TODO: Migrate Form submission to n8n
     setFormData({ name: '', email: '', message: '' });
   };
 
