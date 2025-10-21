@@ -248,7 +248,7 @@ export default function Portfolio() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    alert('Message received. Will respond within 24 hours.');
+    alert('Message received.');
     setFormData({ name: '', email: '', message: '' });
   };
 
