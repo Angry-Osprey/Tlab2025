@@ -1,12 +1,22 @@
 // src/Portfolio.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Mail, ExternalLink, ArrowRight } from 'lucide-react';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
+/*
+Hello Idiot,
+  I am writing you this message to remind you to add comments
+  to this page, i know you don't want to, but for your own sake 
+  please listen to yourself.
 
+  V/R
+
+  -Past you.
+
+*/
 //birds that the flock also avoids(red).
 class Pred {
-  constructor(x,y){
+  constructor(x, y) {
     this.x = x;
     this.y = y;
     this.vx = (Math.random() - 0.5) * 0.5;
@@ -14,12 +24,12 @@ class Pred {
     this.angle = Math.random() * Math.PI * 2;
     this.targetAngle = this.angle;
   }
-  update(Pred, width, height, dt=1){
+  update(Pred, width, height, dt = 1) {
     //pred wandering
     this.angle += (Math.random() - 0.5) * 0.15 * dt;
     this.vx += Math.cos(this.angle) * 0.15 * dt;
     this.vy += Math.sin(this.angle) * 0.15 * dt;
-    
+
     //speed constraint
     const speed = Math.hypot(this.vx, this.vy);
     const maxSpeed = 2;
@@ -37,7 +47,7 @@ class Pred {
     if (this.y < 0) this.y = height;
     if (this.y > height) this.y = 0;
   }
-  
+
 
   draw(ctx) {
     ctx.save();
@@ -137,7 +147,7 @@ class Bird {
     }
 
     if (sCount > 0) {
-      // Immediate repulsion to avoid overlap (separation)
+      // Immediate repulsion 
       this.vx += sx * 0.05 * dt;
       this.vy += sy * 0.05 * dt;
     }
@@ -213,7 +223,7 @@ export default function Portfolio() {
     }
     birdsRef.current = list;
   }, []);
-  
+
   //pred birds
   useEffect(() => {
     const plist = [];
@@ -221,10 +231,10 @@ export default function Portfolio() {
       plist.push(new Pred(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
     }
     predRef.current = plist;
-  }, []);  
+  }, []);
 
 
-  // Mouse handling
+  // Mouse handling <-- i hate the way this came out 
   useEffect(() => {
     const handleMouseMove = (e) => {
       const m = { x: e.clientX, y: e.clientY };
@@ -248,7 +258,7 @@ export default function Portfolio() {
     };
   }, []);
 
-  // Canvas + RAF loop (run once)
+  // Canvas + Animation loop. <-- maybe good maybe shit...
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -276,7 +286,7 @@ export default function Portfolio() {
       reqId = requestAnimationFrame(animate);
 
       const now = performance.now();
-      let dt = (now - lastTimeRef.current) / 16.6667; // 1 ≈ one 60fps frame
+      let dt = (now - lastTimeRef.current) / 16.6667; // 1 ≈ one 60fps frame according to google <-- trust but verify 
       lastTimeRef.current = now;
       dt = Math.min(2, Math.max(0.25, dt));
 
@@ -305,7 +315,7 @@ export default function Portfolio() {
 
       // birds
       for (const bird of birdsRef.current) {
-        bird.update(mouseRef.current, movingRef.current, birdsRef.current,predRef.current, w, h, dt);
+        bird.update(mouseRef.current, movingRef.current, birdsRef.current, predRef.current, w, h, dt);
         bird.draw(ctx);
       }
       for (const Pred of predRef.current) {
@@ -328,7 +338,7 @@ export default function Portfolio() {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData); 
+    console.log('Form submitted:', formData);
     alert('Form not submitted: Backend Migration in progress! please contact me via linkedin or gmail. sorry for the inconvenience.');//response message to user TODO: Migrate Form submission to n8n
     setFormData({ name: '', email: '', message: '' });
   };
@@ -341,10 +351,10 @@ export default function Portfolio() {
       link: 'https://github.com/Angry-Osprey/Tlab2025'
     },
     {
-      title: 'Comming Soon',
+      title: 'HL7 FHIR Database',
       description: 'This project is not quite ready yet.',
       tags: ['HL7 FHIR', 'Firestore', 'React'],
-      link: '/TYDB'
+      link: '/TYDB' // <-- this link does not open in a new tab look into this asap.
     }
   ];
 
@@ -423,10 +433,10 @@ export default function Portfolio() {
             <div>
               <h2 className="text-sm font-mono text-gray-500 mb-8 tracking-wider">ABOUT</h2>
               <p className="text-xl text-gray-300 leading-relaxed mb-6">
-                My role as a software engineer involves developing sophisticated solutions to handle complex technical problems. 
-                My professional experience spans work with web development and machine learning and systems architecture. 
-                I worked as an Undergraduate Research Assistant at Lamar University to help develop mixed reality solutions through the HoloLens 2 project which combined innovative technology with real-world functionality. 
-                My time in the United States Air Force 524th Special Operations Squadron under Air Force Special Operations Command (USSOCOM) has shown me how to stay precise and disciplined while being flexible. 
+                My role as a software engineer involves developing sophisticated solutions to handle complex technical problems.
+                My professional experience spans work with web development and machine learning and systems architecture.
+                I worked as an Undergraduate Research Assistant at Lamar University to help develop mixed reality solutions through the HoloLens 2 project which combined innovative technology with real-world functionality.
+                My time in the United States Air Force 524th Special Operations Squadron under Air Force Special Operations Command (USSOCOM) has shown me how to stay precise and disciplined while being flexible.
                 The problem-solving abilities and team collaboration experience I developed in the Air Force help me design efficient systems and overcome technical challenges with focused dedication.
               </p>
               <p className="text-xl text-gray-400 leading-relaxed">
@@ -514,3 +524,12 @@ export default function Portfolio() {
     </div>
   );
 }
+/*
+
+CLEAN UP COMMENTS ON THIS PAGE. 
+copy the style from TYDB people do not like inconsistent comments
+SHIFT + ALT + F <-- for when you mess up the spacing again.
+
+
+
+*/
