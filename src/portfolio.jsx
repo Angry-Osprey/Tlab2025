@@ -1,7 +1,62 @@
 // src/Portfolio.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Mail, ExternalLink, ArrowRight } from 'lucide-react';
+import {Link} from "react-router-dom";
 
+
+//birds that the flock also avoids(red).
+class Pred {
+  constructor(x,y){
+    this.x = x;
+    this.y = y;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+    this.angle = Math.random() * Math.PI * 2;
+    this.targetAngle = this.angle;
+  }
+  update(Pred, width, height, dt=1){
+    //pred wandering
+    this.angle += (Math.random() - 0.5) * 0.15 * dt;
+    this.vx += Math.cos(this.angle) * 0.15 * dt;
+    this.vy += Math.sin(this.angle) * 0.15 * dt;
+    
+    //speed constraint
+    const speed = Math.hypot(this.vx, this.vy);
+    const maxSpeed = 2;
+    if (speed > maxSpeed) {
+      this.vx = (this.vx / speed) * maxSpeed;
+      this.vy = (this.vy / speed) * maxSpeed;
+    }
+    //movement
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+
+    //screen wrap
+    if (this.x < 0) this.x = width;
+    if (this.x > width) this.x = 0;
+    if (this.y < 0) this.y = height;
+    if (this.y > height) this.y = 0;
+  }
+  
+
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.beginPath();
+    ctx.moveTo(8, 0);
+    ctx.lineTo(-4, 4);
+    ctx.lineTo(-4, -4);
+    ctx.closePath();
+    ctx.fillStyle = '#990202';
+    ctx.fill();
+    ctx.strokeStyle = '#990202';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+// flocking birds (yellow)
 class Bird {
   constructor(x, y) {
     this.x = x;
@@ -12,7 +67,7 @@ class Bird {
     this.targetAngle = this.angle;
   }
 
-  update(mouse, isMoving, birds, width, height, dt = 1) {
+  update(mouse, isMoving, birds, preds, width, height, dt = 1) {
     // Gentle wandering (time-scaled)
     this.angle += (Math.random() - 0.5) * 0.15 * dt;
     this.vx += Math.cos(this.angle) * 0.15 * dt;
@@ -26,6 +81,18 @@ class Bird {
       const force = ((200 - md) / 200) * 0.8 * dt;
       this.vx += (mdx / md) * force;
       this.vy += (mdy / md) * force;
+    }
+    // Pred avoidance (time-scaled)
+    for (const pred of preds) {
+      const dx = this.x - pred.x;
+      const dy = this.y - pred.y;
+      const dist = Math.hypot(dx, dy) || 1;
+
+      if (dist < 200) {
+        const force = ((200 - dist) / 200) * 0.8 * dt;
+        this.vx += (dx / dist) * force;
+        this.vy += (dy / dist) * force;
+      }
     }
 
     // Flocking strength varies with mouse proximity (farther = stronger)
@@ -132,7 +199,7 @@ export default function Portfolio() {
   // Refs used by the animation loop (so the loop doesn't re-create on state change)
   const mouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
   const movingRef = useRef(false);
-
+  const predRef = useRef([])
   const canvasRef = useRef(null);
   const birdsRef = useRef([]);
   const mouseTimeoutRef = useRef(null);
@@ -146,6 +213,16 @@ export default function Portfolio() {
     }
     birdsRef.current = list;
   }, []);
+  
+  //pred birds
+  useEffect(() => {
+    const plist = [];
+    for (let i = 0; i < 3; i++) {
+      plist.push(new Pred(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
+    }
+    predRef.current = plist;
+  }, []);  
+
 
   // Mouse handling
   useEffect(() => {
@@ -228,8 +305,12 @@ export default function Portfolio() {
 
       // birds
       for (const bird of birdsRef.current) {
-        bird.update(mouseRef.current, movingRef.current, birdsRef.current, w, h, dt);
+        bird.update(mouseRef.current, movingRef.current, birdsRef.current,predRef.current, w, h, dt);
         bird.draw(ctx);
+      }
+      for (const Pred of predRef.current) {
+        Pred.update(predRef.current, w, h, dt);
+        Pred.draw(ctx);
       }
     };
 
@@ -263,30 +344,17 @@ export default function Portfolio() {
       title: 'Comming Soon',
       description: 'This project is not quite ready yet.',
       tags: ['HL7 FHIR', 'Firestore', 'React'],
-      link: '#'
+      link: '/TYDB'
     }
   ];
 
   const skills = ['C#', 'React', 'Node.js', 'Python', 'Firebase', 'WebGL', 'Unity6'];
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
+    <div className="min-h-screen p- bg-black text-white relative overflow-x-hidden">
       <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-0" />
 
       <div className="relative z-10">
-        {/* Navigation */}
-        <nav className="fixed w-full top-0 z-50 bg-black/50 backdrop-blur-sm border-b border-gray-800">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="flex justify-between items-center h-20">
-              <div className="text-xl font-light tracking-wider text-gray-300">Tylers-Lab.dev</div>
-              <div className="flex space-x-8">
-                <a href="#work" className="text-gray-400 hover:text-white transition-colors">Work</a>
-                <a href="#about" className="text-gray-400 hover:text-white transition-colors">About</a>
-                <a href="#contact" className="text-gray-400 hover:text-white transition-colors">Contact</a>
-              </div>
-            </div>
-          </div>
-        </nav>
 
         {/* Hero (mobile-safe) */}
         <section className="min-h-dvh flex items-center justify-center px-4 pt-24 md:pt-28">
