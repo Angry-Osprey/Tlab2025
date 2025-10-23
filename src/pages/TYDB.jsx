@@ -10,36 +10,13 @@ import { Search } from "lucide-react";
 
 /* Components */
 import PatientTable from "@/components/PatientTable";
+import PTH from "@/components/PatientTableHeader"
 import PatientForm from "@/components/PatientForm";
+import { mockPatients } from "@/data/mockPatients";
 
 export default function TYDB() {
     /* Seed data */
-    const [rows, setRows] = useState([
-        {
-            id: "1",
-            resourceType: "Patient",
-            identifier: "P001234",
-            familyName: "Smith",
-            givenName: "John",
-            birthDate: "1985-03-15",
-            gender: "male",
-            status: "active",
-            diagnoses: ["Type 2 Diabetes", "Hypertension"],
-            medications: ["Metformin 500mg", "Lisinopril 10mg"],
-        },
-        {
-            id: "2",
-            resourceType: "Patient",
-            identifier: "P002345",
-            familyName: "Johnson",
-            givenName: "Sarah",
-            birthDate: "1992-07-22",
-            gender: "female",
-            status: "active",
-            diagnoses: ["Asthma"],
-            medications: ["Albuterol Inhaler"],
-        },
-    ]);
+    const [rows, setRows] = useState(mockPatients);
 
     /* Search query */
     const [query, setQuery] = useState("");
@@ -71,8 +48,9 @@ export default function TYDB() {
         );
     }, [rows, query]);
 
-    /* Generic form change handler */
-    const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    /* Form change handler */
+    const onChange = (e) =>
+        setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
     /* Submit handler */
     const handleSubmit = () => {
@@ -118,8 +96,28 @@ export default function TYDB() {
                     />
                 </div>
 
-                {/* Results table */}
-                <PatientTable filtered={filtered} />
+                {/* Results section */}
+                <div className="rounded-2xl border border-gray-800 overflow-hidden">
+                    {/* fixed bar with record count */}
+                    <div className="bg-gray-900/60 px-4 py-2 text-xs sm:text-sm uppercase tracking-wider text-gray-400 font-semibold">
+                        Patient Records ({filtered.length})
+                    </div>
+                    <div >
+                        <PTH />
+                    </div>
+
+                    {/* scrollable area */}
+                    <div className="max-h-[600px] overflow-y-auto">
+                        <div className="overflow-x-auto bg-gray-900/30 backdrop-blur-sm">
+                            <PatientTable
+                                patients={filtered}
+                                onUpdate={(updated) =>
+                                    setRows((prev) => prev.map((x) => (x.identifier === updated.identifier ? updated : x)))
+                                }
+                            />
+                        </div>
+                    </div>
+                </div>
 
                 {/* Input panel */}
                 <PatientForm
