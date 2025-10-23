@@ -1,4 +1,3 @@
-// lib/flock.js
 export class Predator {
     constructor(x, y) {
         this.x = x;
@@ -8,30 +7,38 @@ export class Predator {
         this.angle = Math.random() * Math.PI * 2;
         this.targetAngle = this.angle;
     }
-    update(Pred, width, height, dt = 1) {
-        //pred wandering
+
+    update(width, height, dt = 1) {
+        // wander baseline
         this.angle += (Math.random() - 0.5) * 0.15 * dt;
         this.vx += Math.cos(this.angle) * 0.15 * dt;
         this.vy += Math.sin(this.angle) * 0.15 * dt;
 
-        //speed constraint
+        // speed constraint
         const speed = Math.hypot(this.vx, this.vy);
         const maxSpeed = 2;
         if (speed > maxSpeed) {
             this.vx = (this.vx / speed) * maxSpeed;
             this.vy = (this.vy / speed) * maxSpeed;
         }
-        //movement
+
+        // movement
         this.x += this.vx * dt;
         this.y += this.vy * dt;
 
-        //screen wrap
+        // rotate toward velocity
+        this.targetAngle = Math.atan2(this.vy, this.vx);
+        let da = this.targetAngle - this.angle;
+        while (da > Math.PI) da -= Math.PI * 2;
+        while (da < -Math.PI) da += Math.PI * 2;
+        this.angle += da * 0.1 * dt;
+
+        // screen wrap
         if (this.x < 0) this.x = width;
         if (this.x > width) this.x = 0;
         if (this.y < 0) this.y = height;
         if (this.y > height) this.y = 0;
     }
-
 
     draw(ctx) {
         ctx.save();
@@ -42,14 +49,15 @@ export class Predator {
         ctx.lineTo(-4, 4);
         ctx.lineTo(-4, -4);
         ctx.closePath();
-        ctx.fillStyle = '#990202';
+        ctx.fillStyle = "#990202";
         ctx.fill();
-        ctx.strokeStyle = '#990202';
+        ctx.strokeStyle = "#990202";
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.restore();
     }
 }
+
 // flocking birds (yellow)
 export class Bird {
     constructor(x, y) {
@@ -76,14 +84,14 @@ export class Bird {
             this.vx += (mdx / md) * force;
             this.vy += (mdy / md) * force;
         }
+
         // Pred avoidance (time-scaled)
         for (const pred of preds) {
             const dx = this.x - pred.x;
             const dy = this.y - pred.y;
             const dist = Math.hypot(dx, dy) || 1;
-
             if (dist < 200) {
-                const force = ((200 - dist) / 200) * 0.8 * dt;
+                const force = ((200 - dist) / 200) * 3 * dt;
                 this.vx += (dx / dist) * force;
                 this.vy += (dy / dist) * force;
             }
@@ -115,28 +123,23 @@ export class Bird {
         }
 
         if (aCount > 0) {
-            // Average neighbor velocity
             avx /= aCount; avy /= aCount;
-            // Steer toward that average
-            // Multiplied by flockStrength and dt to keep behavior stable across browsers
             this.vx += (avx - this.vx) * (0.05 * flockStrength) * dt;
             this.vy += (avy - this.vy) * (0.05 * flockStrength) * dt;
         }
 
         if (cCount > 0) {
-            // Move slightly toward centroid (cohesion)
             cx /= cCount; cy /= cCount;
             this.vx += (cx - this.x) * 0.0008 * flockStrength * dt;
             this.vy += (cy - this.y) * 0.0008 * flockStrength * dt;
         }
 
         if (sCount > 0) {
-            // Immediate repulsion 
             this.vx += sx * 0.05 * dt;
             this.vy += sy * 0.05 * dt;
         }
 
-        // Time-based damping: 
+        // Time-based damping
         const damping = Math.pow(0.92, dt);
         this.vx *= damping;
         this.vy *= damping;
@@ -153,7 +156,7 @@ export class Bird {
         this.x += this.vx * dt;
         this.y += this.vy * dt;
 
-        // Rotate toward velocity (time-scaled)
+        // Rotate toward velocity
         this.targetAngle = Math.atan2(this.vy, this.vx);
         let da = this.targetAngle - this.angle;
         while (da > Math.PI) da -= Math.PI * 2;
@@ -176,9 +179,9 @@ export class Bird {
         ctx.lineTo(-4, 4);
         ctx.lineTo(-4, -4);
         ctx.closePath();
-        ctx.fillStyle = '#fbbf24';
+        ctx.fillStyle = "#fbbf24";
         ctx.fill();
-        ctx.strokeStyle = '#f59e0b';
+        ctx.strokeStyle = "#f59e0b";
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.restore();

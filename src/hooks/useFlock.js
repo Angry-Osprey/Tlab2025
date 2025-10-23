@@ -90,7 +90,7 @@ export function useFlock(canvasRef, { birdCount = 100, predatorCount = 3 } = {})
                 b.draw(ctx);
             }
             for (const p of predatorsRef.current) {
-                p.update(w, h, dt);
+                p.update(w, h, dt, birdsRef.current);
                 p.draw(ctx);
             }
         };
