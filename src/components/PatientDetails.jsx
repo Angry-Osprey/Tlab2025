@@ -36,13 +36,13 @@ export default function PatientDetails({ patient, onEdit }) {
                             <KV label="Given Name" value={patient.givenName || "—"} />
                             <KV label="Birth Date" value={patient.birthDate || "—"} />
                             <KV label="Gender" value={patient.gender || "—"} />
-                            {/* add more simple fields later as KVs */}
+                        
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            {/* MULTI-ENTRY SECTIONS - each as its own little table */}
+            {/* MULTI-ENTRY SECTIONS */}
             {populated.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {populated.map(({ key, label, values }) => (
